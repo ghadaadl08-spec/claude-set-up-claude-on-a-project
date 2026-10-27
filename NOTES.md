@@ -18,6 +18,10 @@ Without the `.env` deny rule, Claude could read the file while exploring the pro
 
 One limit I'm aware of: `Read(./.env)` blocks Claude's Read tool, not every possible shell command. The rules are a guardrail, and the real protection is keeping real secrets out of the project folder.
 
+## .gitignore fix
+
+The starter `.gitignore` didn't actually ignore `.env`, `npm-debug.log*` or `.claude/settings.local.json`. Those lines started with three spaces, and git treats leading spaces as part of the pattern. I removed the indentation and checked with `git check-ignore -v` that all three are now ignored. The deny rules keep `.env` away from Claude; `.gitignore` keeps it out of git.
+
 ## Verification
 
 <!-- Fill this in after checking in a fresh Claude session -->
