@@ -44,7 +44,7 @@ Anything Claude can find easily by reading the code (such as a file-by-file tour
   "permissions": {
     "allow": ["Bash(npm test:*)"],
     "ask":   ["Bash(git push:*)"],
-    "deny":  ["Read(./.env)", "Read(./**/.env)"]
+    "deny":  ["Read(./.env)", "Read(./**/.env)", "Bash(git push --force:*)"]
   }
 }
 ```
@@ -61,6 +61,11 @@ Claude checks rules in this order: **deny → ask → allow**. The most restrict
 - Pushing is outward-facing and hard to take back. It changes the shared remote and starts CI.
 - `ask` instead of `deny`: I still want Claude to be able to push, but only after I've checked what's going out.
 
+### Deny: `git push --force`
+
+- Force-pushing can overwrite other people's commits on the remote, so it is blocked outright.
+- Deny is checked before ask, so this wins over the broader `Bash(git push:*)` ask rule.
+
 ### Deny: reading `.env`
 
 - `.env` holds real config and secrets. Anything Claude reads ends up in the conversation context.
@@ -70,3 +75,7 @@ Claude checks rules in this order: **deny → ask → allow**. The most restrict
 ### Shared vs. personal settings
 
 `.claude/settings.json` is meant to be committed, so these rules apply to everyone on the project. Personal tweaks go in `.claude/settings.local.json`, which git ignores.
+
+## Verification
+
+Running `/memory` showed my `CLAUDE.md` loaded, and `/permissions` showed my rules.
